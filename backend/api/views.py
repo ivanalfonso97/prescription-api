@@ -1,19 +1,12 @@
-import json
-from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
-from prescriptions.models import Prescription
+from prescriptions.serializers import PrescriptionSerializer
 
+@api_view(['POST'])
 def api_home(request, *args, **kwargs):
-    model_data = Prescription.objects.all().order_by("?").first()
-    data = {}
-    if model_data:
-        data = {
-            "id": model_data.id,
-            "patient_name": model_data.patient_name,
-            "doctor_name": model_data.doctor_name,
-            "issue_date": model_data.issue_date,
-            "expiry_date": model_data.expiry_date,
-            "created_at": model_data.created_at,
-            "updated_at": model_data.updated_at,
-        }
-    return JsonResponse(data)
+    serializer = PrescriptionSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        print(serializer.data)
+        return Response(serializer.data)
+    return Response({"message": "Invalid data"}, status=400)
