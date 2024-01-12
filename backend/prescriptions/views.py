@@ -1,7 +1,9 @@
-from rest_framework import generics, mixins, permissions, authentication
+from rest_framework import generics, mixins
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+
+from api.mixins import StaffEditorPermissionMixin
 
 from .models import Prescription
 from .serializers import PrescriptionSerializer
@@ -12,7 +14,10 @@ from .serializers import PrescriptionSerializer
 
 # prescription_detail_view = PrescriptionListAPIView.as_view()
 
-class PrescriptionListCreateAPIView(generics.ListCreateAPIView):
+class PrescriptionListCreateAPIView(
+    StaffEditorPermissionMixin,
+    generics.ListCreateAPIView
+):
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionSerializer
   
@@ -29,13 +34,19 @@ class PrescriptionListCreateAPIView(generics.ListCreateAPIView):
 
 prescription_list_create_view = PrescriptionListCreateAPIView.as_view()
 
-class PrescriptionDetailAPIView(generics.RetrieveAPIView):
+class PrescriptionDetailAPIView(
+    StaffEditorPermissionMixin,
+    generics.RetrieveAPIView
+):
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionSerializer
 
 prescription_detail_view = PrescriptionDetailAPIView.as_view()
 
-class PrescriptionUpdateAPIView(generics.UpdateAPIView):
+class PrescriptionUpdateAPIView(
+    StaffEditorPermissionMixin,
+    generics.UpdateAPIView
+):
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionSerializer
     lookup_field = 'pk'
@@ -46,7 +57,10 @@ class PrescriptionUpdateAPIView(generics.UpdateAPIView):
 
 prescription_update_view = PrescriptionUpdateAPIView.as_view()
 
-class PrescriptionDestroyAPIView(generics.DestroyAPIView):
+class PrescriptionDestroyAPIView(
+    StaffEditorPermissionMixin,
+    generics.DestroyAPIView
+):
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionSerializer
     lookup_field = 'pk'
@@ -56,7 +70,6 @@ class PrescriptionDestroyAPIView(generics.DestroyAPIView):
 
 prescription_destroy_view = PrescriptionDestroyAPIView.as_view()
 
-
 class PrescriptionMixinView(
     mixins.ListModelMixin, 
     mixins.CreateModelMixin,
@@ -64,7 +77,7 @@ class PrescriptionMixinView(
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     generics.GenericAPIView
-    ):
+):
 
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionSerializer
