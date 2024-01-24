@@ -15,7 +15,7 @@ from .serializers import PrescriptionSerializer
 # prescription_detail_view = PrescriptionListAPIView.as_view()
 
 class PrescriptionListCreateAPIView(
-    StaffEditorPermissionMixin,
+    # StaffEditorPermissionMixin,
     generics.ListCreateAPIView
 ):
     queryset = Prescription.objects.all()
@@ -35,7 +35,7 @@ class PrescriptionListCreateAPIView(
 prescription_list_create_view = PrescriptionListCreateAPIView.as_view()
 
 class PrescriptionDetailAPIView(
-    StaffEditorPermissionMixin,
+    # StaffEditorPermissionMixin,
     generics.RetrieveAPIView
 ):
     queryset = Prescription.objects.all()
@@ -44,7 +44,7 @@ class PrescriptionDetailAPIView(
 prescription_detail_view = PrescriptionDetailAPIView.as_view()
 
 class PrescriptionUpdateAPIView(
-    StaffEditorPermissionMixin,
+    # StaffEditorPermissionMixin,
     generics.UpdateAPIView
 ):
     queryset = Prescription.objects.all()
@@ -58,7 +58,7 @@ class PrescriptionUpdateAPIView(
 prescription_update_view = PrescriptionUpdateAPIView.as_view()
 
 class PrescriptionDestroyAPIView(
-    StaffEditorPermissionMixin,
+    # StaffEditorPermissionMixin,
     generics.DestroyAPIView
 ):
     queryset = Prescription.objects.all()
