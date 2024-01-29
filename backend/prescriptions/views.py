@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
-from api.mixins import StaffEditorPermissionMixin
+from api.mixins import StaffEditorPermissionMixin, UserQuerySetMixin
 
 from .models import Prescription
 from .serializers import PrescriptionSerializer
@@ -15,7 +15,8 @@ from .serializers import PrescriptionSerializer
 # prescription_detail_view = PrescriptionListAPIView.as_view()
 
 class PrescriptionListCreateAPIView(
-    # StaffEditorPermissionMixin,
+    UserQuerySetMixin,
+    StaffEditorPermissionMixin,
     generics.ListCreateAPIView
 ):
     queryset = Prescription.objects.all()
@@ -30,12 +31,21 @@ class PrescriptionListCreateAPIView(
         if doctor_name is None:
             doctor_name = "N/A"
         
-        serializer.save()
+        serializer.save(user=self.request.user)
+
+    # def get_queryset(self, *args, **kwargs):
+    #     queryset = super().get_queryset(*args, **kwargs)
+    #     request = self.request
+    #     user = request.user
+    #     if not user.is_authenticated:
+    #         return Prescription.objects.none()
+    #     return queryset.filter(user=request.user)
 
 prescription_list_create_view = PrescriptionListCreateAPIView.as_view()
 
 class PrescriptionDetailAPIView(
-    # StaffEditorPermissionMixin,
+    UserQuerySetMixin,
+    StaffEditorPermissionMixin,
     generics.RetrieveAPIView
 ):
     queryset = Prescription.objects.all()
@@ -44,7 +54,8 @@ class PrescriptionDetailAPIView(
 prescription_detail_view = PrescriptionDetailAPIView.as_view()
 
 class PrescriptionUpdateAPIView(
-    # StaffEditorPermissionMixin,
+    UserQuerySetMixin,
+    StaffEditorPermissionMixin,
     generics.UpdateAPIView
 ):
     queryset = Prescription.objects.all()
@@ -58,7 +69,7 @@ class PrescriptionUpdateAPIView(
 prescription_update_view = PrescriptionUpdateAPIView.as_view()
 
 class PrescriptionDestroyAPIView(
-    # StaffEditorPermissionMixin,
+    StaffEditorPermissionMixin,
     generics.DestroyAPIView
 ):
     queryset = Prescription.objects.all()
